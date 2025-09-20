@@ -19,9 +19,13 @@ const PROCESSOR_ID = process.env.PROCESSOR_ID;
 const keyFilePath = path.join(__dirname, 'genai-471818-c3cbc7fa755d.json');
 
 const client = new google.auth.GoogleAuth({
-  keyFile: keyFilePath,
-  scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
+      credentials: {
+        client_email: process.env.client_email,
+        private_key: process.env.private_key.replace(/\\n/g, "\n"),
+      },
+      projectId: PROJECT_ID,
+      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+    });
 
 const documentai = google.documentai({
   version: 'v1',
@@ -123,3 +127,4 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
