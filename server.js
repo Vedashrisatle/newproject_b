@@ -46,9 +46,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Vertex AI setup
 
 
-const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_JSON);
-
-const client = new VertexAI({ credentials: serviceAccount });
+// Vertex AI setup
+const vertexAI = new VertexAI({
+  project: PROJECT_ID,
+  location: 'us-central1',
+});
 
 
 const model = vertexAI.getGenerativeModel({
@@ -114,6 +116,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
