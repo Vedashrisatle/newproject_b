@@ -17,9 +17,9 @@ app.use( cors({ origin: "https://new-project-three-flax.vercel.app", // **no tra
 
 app.use(express.json());
 
-const PROJECT_ID = process.env.PROJECT_ID;
+const PROJECT_ID = "genai-471818";
 const LOCATION = 'us';
-const PROCESSOR_ID = process.env.PROCESSOR_ID;
+const PROCESSOR_ID = "54be1a4c93565429";
 
 // Google Document AI Auth
 const client = new google.auth.GoogleAuth({
@@ -112,6 +112,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
