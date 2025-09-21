@@ -77,7 +77,7 @@ const encodedFile = fileData.toString("base64");
     });
 
     const text = result.data.document?.text || '';
-    console.log(text)
+   
 
     if (!text.trim()) {
       return res.status(400).json({ error: 'Document contained no extractable text.' });
@@ -116,6 +116,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
