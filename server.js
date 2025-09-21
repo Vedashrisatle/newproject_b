@@ -9,6 +9,12 @@ const { VertexAI } = require('@google-cloud/vertexai');
 const app = express();
 
 // CORS setup - allow your frontend
+// CORS setup - allow your frontend 
+app.use( cors({ origin: "https://new-project-three-flax.vercel.app", // **no trailing slash** 
+               methods: ["GET", "POST", "OPTIONS"], 
+               allowedHeaders: ["Content-Type", "Authorization"],
+              }) );
+
 app.use(express.json());
 
 const PROJECT_ID = process.env.PROJECT_ID;
@@ -106,6 +112,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
