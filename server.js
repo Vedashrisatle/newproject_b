@@ -16,7 +16,7 @@ app.use(express.json());
 const PROJECT_ID = process.env.PROJECT_ID;
 const LOCATION = 'us';
 const PROCESSOR_ID = process.env.PROCESSOR_ID;
-const keyFilePath = path.join(__dirname, 'genai-471818-c3cbc7fa755d.json');
+
 
 const client = new google.auth.GoogleAuth({
       credentials: {
@@ -127,4 +127,5 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
 
