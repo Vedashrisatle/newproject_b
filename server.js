@@ -40,12 +40,7 @@ const documentai = google.documentai({
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Vertex AI setup
-// Vertex AI setup
-const vertexAI = new VertexAI({
-  project: "genai-471818",
-  location: 'us-central1',
-});
-
+const client = new VertexAI({ credentials: serviceAccount });
 
 const model = vertexAI.getGenerativeModel({
   model: 'gemini-2.5-flash-lite',
@@ -110,6 +105,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
