@@ -11,7 +11,7 @@ const app = express();
 // CORS setup - allow your frontend
 app.use(
   cors({
-    origin: "https://new-project-three-flax.vercel.app", // frontend domain
+    origin: "https://new-project-three-flax.vercel.app/", // frontend domain
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -110,3 +110,4 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
