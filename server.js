@@ -22,15 +22,10 @@ app.use(express.json());
 const PROJECT_ID = process.env.PROJECT_ID;
 const LOCATION = 'us';
 const PROCESSOR_ID = process.env.PROCESSOR_ID;
-
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_JSON);
 // Google Document AI Auth
 const client = new google.auth.GoogleAuth({
-  credentials: {
-    client_email: process.env.client_email,
-    private_key: process.env.private_key.replace(/\\n/g, "\n"),
-    private_key_id: process.env.private_key_id,
-    project_id: PROJECT_ID,
-  },
+  credentials:serviceAccount,
 project_id: PROJECT_ID,
   projectId: PROJECT_ID,
   scopes: ["https://www.googleapis.com/auth/cloud-platform"],
@@ -45,10 +40,12 @@ const documentai = google.documentai({
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Vertex AI setup
+// Vertex AI setup
 const vertexAI = new VertexAI({
   project: PROJECT_ID,
   location: 'us-central1',
 });
+
 
 const model = vertexAI.getGenerativeModel({
   model: 'gemini-2.5-flash-lite',
@@ -113,6 +110,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
