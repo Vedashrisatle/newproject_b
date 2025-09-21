@@ -39,7 +39,7 @@ const documentai = google.documentai({
 });
 
 // Multer for file upload
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Vertex AI setup
 const vertexAI = new VertexAI({
@@ -54,9 +54,9 @@ const model = vertexAI.getGenerativeModel({
 // Upload & Analyze endpoint
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
-    const filePath = req.file.path;
-    const fileData = fs.readFileSync(filePath);
-    const encodedFile = fileData.toString('base64');
+   const fileData = req.file.buffer; // already a Buffer
+const encodedFile = fileData.toString("base64");
+
 
     const name = `projects/${PROJECT_ID}/locations/${LOCATION}/processors/${PROCESSOR_ID}`;
 
@@ -110,6 +110,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
