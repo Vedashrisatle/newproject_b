@@ -11,8 +11,8 @@ const app = express();
 // CORS setup - allow your frontend
 app.use(
   cors({
-    origin: "https://new-project-three-flax.vercel.app/", // frontend domain
-    methods: ["GET", "POST"],
+    origin: "https://new-project-three-flax.vercel.app", // **no trailing slash**
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -113,6 +113,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
