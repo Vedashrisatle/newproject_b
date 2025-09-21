@@ -3,39 +3,45 @@ require('dotenv').config();
 const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
-const path = require('path');
 const { google } = require('googleapis');
 const { VertexAI } = require('@google-cloud/vertexai');
 
 const app = express();
-const PORT = 3001;
 
-app.use(cors());
+// CORS setup - allow your frontend
+app.use(
+  cors({
+    origin: "https://new-project-three-flax.vercel.app", // frontend domain
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 const PROJECT_ID = process.env.PROJECT_ID;
 const LOCATION = 'us';
 const PROCESSOR_ID = process.env.PROCESSOR_ID;
 
-
+// Google Document AI Auth
 const client = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.client_email,
-        private_key: process.env.private_key.replace(/\\n/g, "\n"),
-      },
-      projectId: PROJECT_ID,
-      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-    });
+  credentials: {
+    client_email: process.env.client_email,
+    private_key: process.env.private_key.replace(/\\n/g, "\n"),
+  },
+  projectId: PROJECT_ID,
+  scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+});
 
 const documentai = google.documentai({
   version: 'v1',
   auth: client,
 });
 
+// Multer for file upload
 const upload = multer({ dest: 'uploads/' });
 
-process.env.GOOGLE_APPLICATION_CREDENTIALS = keyFilePath;
-
+// Vertex AI setup
 const vertexAI = new VertexAI({
   project: PROJECT_ID,
   location: 'us-central1',
@@ -45,6 +51,7 @@ const model = vertexAI.getGenerativeModel({
   model: 'gemini-2.5-flash-lite',
 });
 
+// Upload & Analyze endpoint
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
     const filePath = req.file.path;
@@ -70,62 +77,36 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'Document contained no extractable text.' });
     }
 
-    const summaryRequest = {
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: `Summarize the following legal document :\n\n${text}` }],
-        },
-      ],
+    // Generate summary
+    const summaryResult = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: `Summarize the following legal document:\n\n${text}` }] }],
       temperature: 0.3,
       maxOutputTokens: 300,
-    };
-
-    const summaryResult = await model.generateContent(summaryRequest);
+    });
     const summary = summaryResult.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'Summary not generated';
 
-    const keyTermsRequest = {
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: `Extract key terms and their values from the following legal document in a concise bullet-point format:\n\n${text}` }],
-        },
-      ],
+    // Extract key terms
+    const keyTermsResult = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: `Extract key terms and their values in bullet points:\n\n${text}` }] }],
       temperature: 0.3,
       maxOutputTokens: 300,
-    };
-
-    const keyTermsResult = await model.generateContent(keyTermsRequest);
+    });
     const keyTerms = keyTermsResult.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'Key terms not extracted';
 
-    const riskAssessmentRequest = {
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: `Provide a risk assessment in the following format:\n- Risk Item: Description (Severity: Low/Medium/High)\n\nFor this legal document:\n\n${text}` }],
-        },
-      ],
+    // Risk assessment
+    const riskAssessmentResult = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: `Provide a risk assessment in this format:\n- Risk Item: Description (Severity: Low/Medium/High)\n\nFor this legal document:\n\n${text}` }] }],
       temperature: 0.3,
       maxOutputTokens: 300,
-    };
-
-    const riskAssessmentResult = await model.generateContent(riskAssessmentRequest);
+    });
     const riskAssessment = riskAssessmentResult.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'Risk assessment not generated';
 
-    res.json({
-      text,
-      summary,
-      keyTerms,
-      riskAssessment,
-    });
+    res.json({ text, summary, keyTerms, riskAssessment });
   } catch (error) {
     console.error('Upload & Analyze error:', error.response?.data || error.message || error);
     res.status(500).json({ error: 'Failed to analyze document' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
-
+// 👇 This is the correct way for Vercel (don’t use app.listen)
+module.exports = app;
