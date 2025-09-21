@@ -28,7 +28,10 @@ const client = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.client_email,
     private_key: process.env.private_key.replace(/\\n/g, "\n"),
+    private_key_id: process.env.private_key_id,
+    project_id: PROJECT_ID,
   },
+project_id: PROJECT_ID,
   projectId: PROJECT_ID,
   scopes: ["https://www.googleapis.com/auth/cloud-platform"],
 });
@@ -110,6 +113,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
