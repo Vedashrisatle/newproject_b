@@ -47,7 +47,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Vertex AI setup
 const vertexAI = new VertexAI({
-  project: PROJECT_ID,
+  project: "genai-471818",
   location: 'us-central1',
 });
 
@@ -115,6 +115,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
