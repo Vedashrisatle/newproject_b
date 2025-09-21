@@ -27,7 +27,7 @@ const PROCESSOR_ID = process.env.PROCESSOR_ID;
 const client = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.client_email,
-    private_key: process.env.private_key,
+    private_key: process.env.private_key.replace(/\\n/g, "\n"),
   },
   projectId: PROJECT_ID,
   scopes: ["https://www.googleapis.com/auth/cloud-platform"],
@@ -110,5 +110,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
