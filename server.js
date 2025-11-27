@@ -81,7 +81,7 @@ const encodedFile = fileData.toString("base64");
     if (!text.trim()) {
       return res.status(400).json({ error: 'Document contained no extractable text.' });
     }
-
+    console.log(text);
     // Generate summary
     const summaryResult = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: `Summarize the following legal document:\n\n${text}` }] }],
@@ -115,6 +115,7 @@ const encodedFile = fileData.toString("base64");
 
 // 👇 This is the correct way for Vercel (don’t use app.listen)
 module.exports = app;
+
 
 
 
