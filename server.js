@@ -165,7 +165,24 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       const keyTermsResult = await makeRequest(keyTermsPrompt);
       const keyTerms = keyTermsResult?.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'Key terms not extracted';
 
-      const riskPrompt = `Provide a risk assessment in this format:\n- Risk Item: Description (Severity: Low/Medium/High)\n\nFor this legal document:\n\n${text}`;
+      const riskPrompt = `You are a legal risk analysis expert.
+
+Analyze the following legal document and generate a clear risk assessment.
+
+Follow this EXACT structured format:
+
+- Risk Item: <short title>
+  Description: <what could go wrong>
+  Severity: Low/Medium/High
+
+Example:
+- Risk Item: Ambiguous Payment Terms
+  Description: Payment due dates are unclear, which may cause disputes between parties.
+  Severity: Medium
+
+Now analyze this document:
+
+${text}`;
       const riskAssessmentResult = await makeRequest(riskPrompt);
       const riskAssessment = riskAssessmentResult?.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'Risk assessment not generated';
 
@@ -183,5 +200,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // Export for Vercel (do not use app.listen)
 module.exports = app;
+
 
 
