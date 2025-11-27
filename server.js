@@ -22,8 +22,8 @@ app.use(express.json());
 
 // --- Config ---
 const PROJECT_ID = process.env.PROJECT_ID || "genai-471818"; // prefer env but fallback to your value
-const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'us'; // Document AI location (e.g. 'us')
-const VERTEX_LOCATION = process.env.VERTEX_LOCATION || 'us-central1'; // Vertex model location
+const LOCATION = 'us'; // Document AI location (e.g. 'us')
+const VERTEX_LOCATION = 'us-central1'; // Vertex model location
 const PROCESSOR_ID = process.env.PROCESSOR_ID || "54be1a4c93565429";
 const VERTEX_MODEL = process.env.VERTEX_MODEL || 'gemini-2.5-flash-lite';
 
@@ -180,3 +180,4 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // Export for Vercel (do not use app.listen)
 module.exports = app;
+
