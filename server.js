@@ -82,7 +82,10 @@ try {
   vertexAI = null;
 }
 
-const model = vertexAI ? vertexAI.getGenerativeModel({ model: VERTEX_MODEL }) : null;
+
+const model = vertexAI.getGenerativeModel({
+  model: 'gemini-2.5-flash-lite',
+});
 
 // --- Health/ping endpoint ---
 app.get('/api/ping', (req, res) => {
@@ -180,4 +183,5 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // Export for Vercel (do not use app.listen)
 module.exports = app;
+
 
